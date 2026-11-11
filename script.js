@@ -18,7 +18,7 @@ function searchVideos(query) {
   });
 
   const url =
-    "http://www.googleapis.com/youtube/v3/search?" + params.toString();
+    "https://www.googleapis.com/youtube/v3/search?" + params.toString();
 
   return fetch(url).then((response) => {
     if (!response.ok) {
