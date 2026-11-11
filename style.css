@@ -1,0 +1,114 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #0f0f0f;
+  color: white;
+}
+
+.navbar {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+.navbar-logo img {
+  width: 30%;
+}
+form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background: #222;
+  color: white;
+  font-size: 16px;
+}
+
+button {
+  padding: 15px 25px;
+  background: #ff3333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #d92323;
+}
+
+#status {
+  text-align: center;
+  color: #bbb;
+  margin-bottom: 20px;
+}
+
+#videoContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.video-card {
+  background: #202020;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.video-card:hover {
+  transform: translateY(-5px);
+}
+
+.video-card img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.video-info {
+  padding: 15px;
+}
+
+.video-info h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.video-info p {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.video-card a {
+  color: white;
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  #videoContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  #videoContainer {
+    grid-template-columns: 1fr;
+  }
+
+  form {
+    flex-direction: column;
+  }
+}

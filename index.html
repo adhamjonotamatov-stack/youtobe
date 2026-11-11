@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube Search App</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-logo">
+        <img src="img/Логотип YouTube на чёрном фоне.png" alt="" />
+      </div>
+
+      <form id="searchForm">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search videos..."
+          required
+        />
+        <button type="submit">Search</button>
+      </form>
+
+      <p id="status"></p>
+
+      <div id="videoContainer"></div>
+    </nav>
+
+    <script src="script.js"></script>
+  </body>
+</html>
