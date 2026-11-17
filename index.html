@@ -8,24 +8,47 @@
   </head>
   <body>
     <nav class="navbar">
-      <div class="navbar-logo">
-        <img src="img/Логотип YouTube на чёрном фоне.png" alt="" />
-      </div>
+      <button class="navbar-btn" type="button">▶ MyTube</button>
 
-      <form id="searchForm">
+      <form class="navbar-form">
         <input
           type="text"
-          id="searchInput"
+          class="navbar-form-input"
           placeholder="Search videos..."
           required
         />
-        <button type="submit">Search</button>
+        <button class="navbar-form-btn" type="submit">Qidirish</button>
       </form>
-
-      <p id="status"></p>
-
-      <div id="videoContainer"></div>
     </nav>
+
+    <main class="main">
+      <p class="status"></p>
+      <div class="videos">
+        <h2 class="videos-title">Qidiruv natijalari</h2>
+        <div class="videos-video"></div>
+      </div>
+
+      <div class="video-clicked hidden">
+        <button class="video-clicked-Return-btn" type="button">
+          ← Natijalarga qaytish
+        </button>
+        <div class="video-contenr">
+          <div class="video-clicked-content">
+            <div class="video-clicked-content-player"></div>
+            <h2 class="video-clicked-content-title"></h2>
+            <p class="video-clicked-content-text"></p>
+          </div>
+
+          <div class="video-clicked-content-footer">
+            <h3 class="video-clicked-content-footer-title">
+              O‘xshash videolar
+            </h3>
+            <p class="video-clicked-content-footer-text"></p>
+            <div class="video-clicked-content-footer-videos"></div>
+          </div>
+        </div>
+      </div>
+    </main>
 
     <script src="script.js"></script>
   </body>
