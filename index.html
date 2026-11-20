@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="uz">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,14 +18,20 @@
           required
         />
         <button class="navbar-form-btn" type="submit">Qidirish</button>
+        <div class="search-history hidden" role="listbox" aria-label="Oldingi qidiruvlar"></div>
       </form>
     </nav>
 
     <main class="main">
       <p class="status"></p>
       <div class="videos">
-        <h2 class="videos-title">Qidiruv natijalari</h2>
-        <div class="videos-video"></div>
+        <h2 class="videos-title hidden">Qidiruv natijalari</h2>
+        <div class="videos-video">
+          <section class="shorts hidden" aria-labelledby="shorts-title">
+            <h2 class="shorts-title" id="shorts-title"><span class="shorts-mark">▶</span> Shorts</h2>
+            <div class="shorts-grid"></div>
+          </section>
+        </div>
       </div>
 
       <div class="video-clicked hidden">
@@ -36,7 +42,11 @@
           <div class="video-clicked-content">
             <div class="video-clicked-content-player"></div>
             <h2 class="video-clicked-content-title"></h2>
-            <p class="video-clicked-content-text"></p>
+            <div class="shorts-channel-line">
+              <span class="shorts-avatar">▶</span>
+              <p class="video-clicked-content-text"></p>
+              <button class="shorts-subscribe-btn" type="button">Obuna bo‘lish</button>
+            </div>
           </div>
 
           <div class="video-clicked-content-footer">
@@ -46,7 +56,15 @@
             <p class="video-clicked-content-footer-text"></p>
             <div class="video-clicked-content-footer-videos"></div>
           </div>
+          <div class="shorts-action-rail" aria-label="Shorts amallari">
+            <button type="button" aria-label="Yoqdi"><span>♡</span><small>28 ming</small></button>
+            <button type="button" aria-label="Izohlar"><span>▤</span><small>169</small></button>
+            <button type="button" aria-label="Ulashish"><span>↗</span><small>Ulashish</small></button>
+            <button type="button" aria-label="Remiks"><span>⟳</span><small>Remiks</small></button>
+          </div>
         </div>
+        <button class="shorts-prev-button hidden" type="button" aria-label="Oldingi Shorts">↑</button>
+        <button class="shorts-next-button" type="button" aria-label="Keyingi Shorts">↓</button>
       </div>
     </main>
 
