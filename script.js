@@ -29,6 +29,12 @@ let recommendationRequestId = 0;
 let shortsVideos = [];
 let currentShortIndex = -1;
 let shortNavigationInProgress = false;
+let lastShortWheelAt = 0;
+let shortWheelAccumulator = 0;
+let shortWheelDirection = 0;
+let shortWheelIsMacTrackpad = false;
+let shortWheelResetTimer;
+const isMac = /Mac/i.test(navigator.platform || navigator.userAgent);
 let recommendationQueue = [];
 let playedVideoIds = new Set();
 let youtubeApiReadyPromise;
@@ -99,6 +105,45 @@ shortsContainer.addEventListener(
   { passive: false },
 );
 
+watchSection.addEventListener(
+  "wheel",
+  (event) => {
+    if (!watchSection.classList.contains("shorts-watch")) return;
+    if (Math.abs(event.deltaY) < 1) return;
+
+    event.preventDefault();
+    if (Date.now() - lastShortWheelAt < 650 || shortNavigationInProgress) return;
+    const delta = Math.abs(event.deltaY);
+    const trackpadSignal = isMac && event.deltaMode === WheelEvent.DOM_DELTA_PIXEL && delta < 80;
+    if (shortWheelAccumulator === 0) shortWheelIsMacTrackpad = trackpadSignal;
+    const isMacTrackpad = shortWheelIsMacTrackpad || trackpadSignal;
+    const direction = isMacTrackpad
+      ? (event.deltaY < 0 ? 1 : -1)
+      : (event.deltaY > 0 ? 1 : -1);
+
+    if (direction !== shortWheelDirection) {
+      shortWheelAccumulator = 0;
+      shortWheelDirection = direction;
+    }
+    shortWheelAccumulator += delta;
+    clearTimeout(shortWheelResetTimer);
+    shortWheelResetTimer = setTimeout(() => {
+      shortWheelAccumulator = 0;
+      shortWheelDirection = 0;
+      shortWheelIsMacTrackpad = false;
+    }, 180);
+
+    const threshold = isMacTrackpad ? 70 : 24;
+    if (shortWheelAccumulator < threshold) return;
+
+    const now = Date.now();
+    shortWheelAccumulator = 0;
+    lastShortWheelAt = now;
+    navigateShort(direction);
+  },
+  { passive: false },
+);
+
 async function searchVideos(query, pageToken = "") {
   const params = new URLSearchParams({
     part: "snippet",
@@ -126,7 +171,7 @@ async function searchVideos(query, pageToken = "") {
   return data;
 }
 
-async function searchShortVideos(searchResults) {
+async function extractShortVideos(searchResults) {
   const candidates = searchResults.filter(
     (video) =>
       video.id.videoId &&
@@ -160,6 +205,23 @@ async function searchShortVideos(searchResults) {
   );
 
   return candidates.filter((video) => shortIds.has(video.id.videoId));
+}
+
+async function searchShortVideos(query) {
+  const params = new URLSearchParams({
+    part: "snippet",
+    q: `${query} #shorts`,
+    type: "video",
+    videoDuration: "short",
+    maxResults: "50",
+    key: API_KEY,
+  });
+  const response = await fetch(`https://www.googleapis.com/youtube/v3/search?${params}`);
+  if (!response.ok) {
+    throw new Error(`Shorts qidiruvida xatolik (${response.status}).`);
+  }
+  const data = await response.json();
+  return extractShortVideos(data.items || []);
 }
 
 function formatVideoDuration(isoDuration) {
@@ -514,9 +576,24 @@ form.addEventListener("submit", async (event) => {
 
     let shortVideos = [];
     try {
-      shortVideos = await searchShortVideos(data.items || []);
+      shortVideos = await extractShortVideos(data.items || []);
     } catch (shortsError) {
       console.error("Shorts qidiruv xatoligi:", shortsError);
+    }
+    if (currentRequest !== searchRequestId) return;
+
+    if (shortVideos.length < 6) {
+      try {
+        const extraShortVideos = await searchShortVideos(query);
+        const knownShortIds = new Set(shortVideos.map((video) => video.id.videoId));
+        shortVideos.push(
+          ...extraShortVideos.filter(
+            (video) => !knownShortIds.has(video.id.videoId),
+          ),
+        );
+      } catch (shortsError) {
+        console.error("Qo‘shimcha Shorts qidiruv xatoligi:", shortsError);
+      }
     }
     if (currentRequest !== searchRequestId) return;
 
